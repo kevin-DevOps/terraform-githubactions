@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "terraform-githubactions-3-9"
+    bucket = "terraform-githubactions"
     key = "ecs/hello-world-app/terraform.tfstate"
     region = "ap-southeast-1"
   }
@@ -45,7 +45,7 @@ resource "aws_ecs_task_definition" "task" {
   container_definitions = jsonencode([
     {
         name = var.app_name
-        image = "631229639219.dkr.ecr.ap-south-1.amazonaws.com/hello-world-app:latest"
+        image = "851725614145.dkr.ecr.ap-southeast-1.amazonaws.com/hello-world-app:latest"
         essential = true
         portMappings = [
             {
@@ -68,7 +68,7 @@ resource "aws_ecs_service" "service" {
   network_configuration {
     subnets         = var.subnet_ids
     assign_public_ip = true
-    security_groups = ["sg-074573236a018cd6c"]
+    security_groups = ["sg-0634f73f6531cf0ca"]
   }
 
   load_balancer {
@@ -82,7 +82,7 @@ resource "aws_lb" "app_lb" {
   name = "${var.app_name}-lb"
   load_balancer_type = "application"
   subnets = var.subnet_ids
-  security_groups = ["sg-074573236a018cd6c"] 
+  security_groups = ["sg-0634f73f6531cf0ca"] 
   internal = false
 }
 
