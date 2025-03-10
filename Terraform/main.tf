@@ -14,24 +14,28 @@ resource "aws_ecs_cluster" "cluster" {
   name = var.ecs_cluster_name
 }
 
-resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
-  assume_role_policy = jsonencode(
-    {
-        Version = "2012-10-17"
-        Statement = [
-            {
-                Effect = "Allow"
-                Principal = {
-                    Service = "ecs-tasks.amazonaws.com"
-                }
-                Action = "sts:AssumeRole"
-            }
-        ]
-    }
-  )
+  resource "aws_iam_role" "ecs_task_execution_role" {
+    name = "ecsTaskExecutionRole1"
+    assume_role_policy = jsonencode(
+      {
+          Version = "2012-10-17"
+          Statement = [
+              {
+                  Effect = "Allow"
+                  Principal = {
+                      Service = "ecs-tasks.amazonaws.com"
+                  }
+                  Action = "sts:AssumeRole"
+              }
+          ]
+      }
+    )
+  }
 
-  managed_policy_arns = [
+resource "aws_iam_role_policy_attachments_exclusive" "ecs_task_execution_role_policies" {
+  role_name = aws_iam_role.ecs_task_execution_role.name
+
+  policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
   ]
 }
