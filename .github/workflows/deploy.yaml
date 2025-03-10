@@ -26,14 +26,19 @@ jobs:
           mask-password: true
         env:
           ACTIONS_STEP_DEBUG: true
+      - name: Verify Docker Context and Login
+        run: |
+          docker context use default
+          docker info --format '{{.ClientInfo.Context}}'  # Should print "default"
+          docker login -u AWS -p $(aws ecr get-login-password --region ap-southeast-1) 631229639219.dkr.ecr.ap-southeast-1.amazonaws.com
 
       - name: Build, Tag, and Push Docker image to Amazon ECR
         env:
-          ECR_REGISTRY: 631229639219.dkr.ecr.ap-southeast-1.amazonaws.com  # Match secrets.AWS_DEFAULT_REGION
+          ECR_REGISTRY: 631229639219.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com  # Match secrets.AWS_DEFAULT_REGION
           ECR_REPOSITORY: hello-world-app
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          $DOCKER_BUILD
+          docker context use default
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
