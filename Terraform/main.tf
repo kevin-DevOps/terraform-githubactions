@@ -78,28 +78,25 @@ resource "aws_ecs_service" "service" {
 }
 
 resource "aws_lb" "app_lb" {
-  name = "${var.app_name}-lb"
+  name               = "${var.app_name}-lb"
+  internal           = false
   load_balancer_type = "application"
-  subnets = var.subnet_ids
-  security_groups = ["sg-0634f73f6531cf0ca"] 
-  internal = false
+  security_groups    = ["sg-0634f73f6531cf0ca"]
+  subnets            = var.subnet_ids
 }
-
 resource "aws_lb_target_group" "app_target_group" {
-  name = "${var.app_name}-tg"
-  protocol = "HTTP"
-  vpc_id = var.vpc_id
-  port = 3000
+  name        = "${var.app_name}-tg"
+  port        = 3000
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
   target_type = "ip"
 }
-
 resource "aws_lb_listener" "app_listener" {
   load_balancer_arn = aws_lb.app_lb.arn
-  port = 80
-  protocol = "HTTP"
-
+  port              = "80"
+  protocol          = "HTTP"
   default_action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = aws_lb_target_group.app_target_group.arn
   }
-} 
+}
