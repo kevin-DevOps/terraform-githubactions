@@ -6,7 +6,7 @@ terraform {
   }
 }
 
-provider "AWS" {
+provider "aws" {
   region = var.region # "deploying in Singapore Region"
 }
 
