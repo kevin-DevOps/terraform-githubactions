@@ -24,10 +24,12 @@ jobs:
         with:
           registry-type: private
           mask-password: true
+        env:
+          ACTIONS_STEP_DEBUG: true
 
       - name: Build, Tag, and Push Docker image to Amazon ECR
         env:
-          ECR_REGISTRY: 631229639219.dkr.ecr.ap-southeast-1.amazonaws.com
+          ECR_REGISTRY: 631229639219.dkr.ecr.ap-southeast-1.amazonaws.com  # Match secrets.AWS_DEFAULT_REGION
           ECR_REPOSITORY: hello-world-app
           IMAGE_TAG: ${{ github.sha }}
         run: |
