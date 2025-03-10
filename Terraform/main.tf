@@ -37,25 +37,24 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 }
 
 resource "aws_ecs_task_definition" "task" {
-  family = var.app_name
-  network_mode = "awsvpc"
-  cpu = "256"
-  memory = "512"
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  family                   = var.app_name
+  network_mode             = "awsvpc"
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-        name = var.app_name
-        image = "851725614145.dkr.ecr.ap-southeast-1.amazonaws.com/hello-world-app:latest"
-        essential = true
-        portMappings = [
-            {
-                containerPort = 3000
-                hostPort = 3000
-            }
-        ]
+      name          = var.app_name
+      image         = "851725614145.dkr.ecr.ap-southeast-1.amazonaws.com/hello-world-app:latest"
+      essential     = true
+      portMappings  = [
+        {
+          containerPort = 3000
+          hostPort      = 3000
+        }
+      ]
     }
   ])
-
 }
 
 resource "aws_ecs_service" "service" {
